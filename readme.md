@@ -87,11 +87,11 @@
 
 `echo listeners.tcp.local = 127.0.0.1:5672 > /etc/rabbitmq/rabbitmq.conf`
 
-`cat > /etc/rabbitmq/advanced.config << 'EOF'`
-`    {kernel,[`
-`        {inet_dist_use_interface,{127,0,0,1}}`
-`    ]}`
-`EOF`
+cat > /etc/rabbitmq/advanced.config << 'EOF'
+    {kernel,[
+        {inet_dist_use_interface,{127,0,0,1}}
+    ]}
+EOF
 
 `rabbitmqctl add_user kat ${RABBITMQ_PASSWORD}`
 
