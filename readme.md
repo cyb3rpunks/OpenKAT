@@ -1,6 +1,6 @@
 # Installation for Debian 11
 
-# Step 1 - Add user to sudo file
+### Step 1 - Add user to sudo file
 `sudo visudo`
 
 `# User privilege specification`
