@@ -92,7 +92,7 @@ cat > /etc/rabbitmq/advanced.config << 'EOF'
         {inet_dist_use_interface,{127,0,0,1}}
     ]}
 EOF
-<pre>
+</pre>
 
 `rabbitmqctl add_user kat ${RABBITMQ_PASSWORD}`
 
