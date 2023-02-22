@@ -2,12 +2,16 @@
 
 # Step 1 - Add user to sudo file
 `sudo visudo`
+
 `# User privilege specification`
+
 `root    ALL=(ALL:ALL) ALL`
+
 `user    ALL=(ALL:ALL) ALL`
 
 ### Step 2 - Install VirtualBox Guest Additions
 `cd /mnt/`
+
 `sudo sh VBoxLinuxAdditions.run`
 
 ### Step 3 - Download and Install OpenKAT
