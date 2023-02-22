@@ -57,7 +57,9 @@
 `sudo -u postgres psql -c 'GRANT ALL ON DATABASE katalogus_db TO katalogus;'`
 
 `sudo -u kat update-katalogus-db`
-#### Remember updating /etc/kat/boefjes.conf with KATALOGUS_DB_URI=postgresql://katalogus:<password>@localhost/katalogus_db
+#### Remember updating /etc/kat/boefjes.conf with 
+
+`KATALOGUS_DB_URI=postgresql://katalogus:<password>@localhost/katalogus_db`
 
 ### Step 4.4 - BytesDB
 `sudo -u postgres createdb bytes_db`
@@ -67,7 +69,9 @@
 `sudo -u postgres psql -c 'GRANT ALL ON DATABASE bytes_db TO bytes;'`
 
 `sudo -u kat update-bytes-db`
-#### Remember updating /etc/kat/bytes.conf with BYTES_DB_URI=postgresql://bytes:<password>@localhost/bytes_db
+#### Remember updating /etc/kat/bytes.conf with 
+
+`BYTES_DB_URI=postgresql://bytes:<password>@localhost/bytes_db`
 
 ### Step 5 - Create Superuser
 `sudo -u kat rocky-cli createsuperuser`
