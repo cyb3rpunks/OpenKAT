@@ -23,10 +23,10 @@ export BYTESDB_PASSWORD=$(tr -dc A-Za-z0-9 < /dev/urandom | head -c 20)
 export RABBITMQ_PASSWORD=$(tr -dc A-Za-z0-9 < /dev/urandom | head -c 20)
 
 # Step 4.2 Saving Passwords to passwords.txt
-echo ROCKYDB: $ROCKYDB_PASSWORD >> passwords.txt
+`echo ROCKYDB: $ROCKYDB_PASSWORD >> passwords.txt
 echo KATALOGUSDB: $KATALOGUSDB_PASSWORD >> passwords.txt
 echo BYTESDB: $BYTESDB_PASSWORD >> passwords.txt
-echo RABBITMQ: $RABBITMQ_PASSWORD >> passwords.txt
+echo RABBITMQ: $RABBITMQ_PASSWORD >> passwords.txt`
 
 # Step 4.2 - RockyDB
 sudo -u postgres createdb rocky_db
