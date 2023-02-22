@@ -86,12 +86,13 @@
 `sudo epmd -kill`
 
 `echo listeners.tcp.local = 127.0.0.1:5672 > /etc/rabbitmq/rabbitmq.conf`
-
+<pre>
 cat > /etc/rabbitmq/advanced.config << 'EOF'
     {kernel,[
         {inet_dist_use_interface,{127,0,0,1}}
     ]}
 EOF
+<pre>
 
 `rabbitmqctl add_user kat ${RABBITMQ_PASSWORD}`
 
