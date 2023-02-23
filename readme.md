@@ -90,7 +90,7 @@ sed -i "s|QUEUE_URI= *\$|QUEUE_URI=amqp://kat:${RABBITMQ_PASSWORD}@localhost:567
 sed -i "s/BYTES_PASSWORD= *\$/BYTES_PASSWORD=$(grep BYTES_PASSWORD /etc/kat/bytes.conf | awk -F'=' '{ print $2 }')/" /etc/kat/*.conf
 </pre>
 
-#### Step 4.6 - Initialize Databases
+### Step 4.6 - Initialize Databases
 <pre>
 sudo -u kat update-bytes-db
 sudo -u kat update-katalogus-db
