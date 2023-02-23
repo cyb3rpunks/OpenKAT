@@ -87,8 +87,6 @@ sudo apt install rabbitmq-server -y
 sudo systemctl stop rabbitmq-server
 sudo epmd -kill
 echo listeners.tcp.local = 127.0.0.1:5672 > /etc/rabbitmq/rabbitmq.conf
-
-
 cat > /etc/rabbitmq/advanced.config << 'EOF'
     {kernel,[
         {inet_dist_use_interface,{127,0,0,1}}
