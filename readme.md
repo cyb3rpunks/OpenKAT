@@ -12,8 +12,9 @@ user    ALL=(ALL:ALL) ALL
 
 ### Step 2 - Install VirtualBox Guest Additions
 <pre>
-cd /mnt/
+cd /media/cdrom
 sudo sh VBoxLinuxAdditions.run
+sudo reboot
 </pre>
 
 ### Step 3 - Download and Install OpenKAT
@@ -45,37 +46,57 @@ echo RABBITMQ: $RABBITMQ_PASSWORD >> passwords.txt
 ### Step 4.2 - RockyDB
 <pre>
 sudo -u postgres createdb rocky_db
-echo "CREATE USER rocky WITH PASSWORD '$ROCKYDB_PASSWORD';" | sudo -u postgres psql
+echo "CREATE USER rocky WITH PASSWORD '${ROCKYDB_PASSWORD}';" | sudo -u postgres psql
 sudo -u postgres psql -c 'GRANT ALL ON DATABASE rocky_db TO rocky;'
-sudo -u kat rocky-cli migrate
-sudo -u kat rocky-cli loaddata /usr/share/kat-rocky/OOI_database_seed.json
 </pre>
 
 ### Step 4.3 - KAT-alogusDB
 <pre>
 sudo -u postgres createdb katalogus_db
-echo "CREATE USER katalogus WITH PASSWORD '$KATALOGUSDB_PASSWORD';" | sudo -u postgres psql
+echo "CREATE USER katalogus WITH PASSWORD '${KATALOGUSDB_PASSWORD}';" | sudo -u postgres psql
 sudo -u postgres psql -c 'GRANT ALL ON DATABASE katalogus_db TO katalogus;'
-sudo -u kat update-katalogus-db
-</pre>
-
-#### Update KATALOGUS_DB_URI in /etc/kat/boefjes.conf
-<pre>
-sed -i "s|KATALOGUS_DB_URI= *\$|postgresql://katalogus:${KATALOGUSDB_PASSWORD}@localhost/katalogus_db|" /etc/kat/boefjes.conf
 </pre>
 
 ### Step 4.4 - BytesDB
 <pre>
 sudo -u postgres createdb bytes_db
-echo "CREATE USER bytes WITH PASSWORD '$BYTESDB_PASSWORD';" | sudo -u postgres psql
+echo "CREATE USER bytes WITH PASSWORD '${BYTESDB_PASSWORD}';" | sudo -u postgres psql
 sudo -u postgres psql -c 'GRANT ALL ON DATABASE bytes_db TO bytes;'
-sudo -u kat update-bytes-db
-</pre>
-#### Update BYTES_DB_URI in /etc/kat/bytes.conf
-<pre>
-sed -i "s|BYTES_DB_URI= *\$|BYTES_DB_URI=postgresql://bytes:${BYTESDB_PASSWORD}@localhost/bytes_db|" /etc/kat/bytes.conf
 </pre>
 
+### Step 4.5 - Update configs
+#### Update BYTES_DB_URI in /etc/kat/bytes.conf
+<pre>
+sudo sed -i "s|BYTES_DB_URI= *\$|BYTES_DB_URI=postgresql://bytes:${BYTESDB_PASSWORD}@localhost/bytes_db|" /etc/kat/bytes.conf
+</pre>
+#### Update KATALOGUS_DB_URI in /etc/kat/boefjes.conf
+<pre>
+sudo sed -i "s|KATALOGUS_DB_URI= *\$|postgresql://katalogus:${KATALOGUSDB_PASSWORD}@localhost/katalogus_db|" /etc/kat/boefjes.conf
+</pre>
+##### Update SCHEDULER_DSP_BROKER_URL in /etc/kat/mula.conf
+<pre>
+sudo sed -i "s|SCHEDULER_DSP_BROKER_URL= *\$|SCHEDULER_DSP_BROKER_URL=amqp://kat:${RABBITMQ_PASSWORD}@localhost:5672/kat|" /etc/kat/mula.conf
+</pre>
+##### Update SCHEDULER_RABBITMQ_DSN in /etc/kat/mula.conf 
+<pre>
+sudo sed -i "s|SCHEDULER_RABBITMQ_DSN= *\$|SCHEDULER_RABBITMQ_DSN=amqp://kat:${RABBITMQ_PASSWORD}@localhost:5672/kat|" /etc/kat/mula.conf
+</pre>
+#### Update QUEUE_URI in rocky.conf bytes.conf, boefjes.conf, octopoes.conf
+<pre>
+sed -i "s|QUEUE_URI= *\$|QUEUE_URI=amqp://kat:${RABBITMQ_PASSWORD}@localhost:5672/kat|" /etc/kat/*.conf
+</pre>
+#### Update Bytes credentials in rocky.conf, boefjes.conf, mula.conf
+<pre>
+sed -i "s/BYTES_PASSWORD= *\$/BYTES_PASSWORD=$(grep BYTES_PASSWORD /etc/kat/bytes.conf | awk -F'=' '{ print $2 }')/" /etc/kat/*.conf
+</pre>
+
+#### Step 4.6 - Initialize Databases
+<pre>
+sudo -u kat update-bytes-db
+sudo -u kat update-katalogus-db
+sudo -u kat rocky-cli migrate
+sudo -u kat rocky-cli loaddata /usr/share/kat-rocky/OOI_database_seed.json
+</pre>
 
 ### Step 5 - Create Superuser
 <pre>
@@ -100,31 +121,11 @@ rabbitmqctl add_vhost kat
 rabbitmqctl set_permissions -p "kat" "kat" ".*" ".*" ".*"
 </pre>
 
-##### Update SCHEDULER_RABBITMQ_DSN in /etc/kat/mula.conf 
+#### Start at systemboot
 <pre>
-sed -i "s|SCHEDULER_RABBITMQ_DSN= *\$|SCHEDULER_RABBITMQ_DSN=amqp://kat:${RABBITMQ_PASSWORD}@localhost:5672/kat|" /etc/kat/mula.conf
-</pre>
-
-##### Update SCHEDULER_DSP_BROKER_URL in /etc/kat/mula.conf
-<pre>
-sed -i "s|SCHEDULER_DSP_BROKER_URL= *\$|SCHEDULER_DSP_BROKER_URL=amqp://kat:${RABBITMQ_PASSWORD}@localhost:5672/kat|" /etc/kat/mula.conf
-</pre>
-
-
-
-#### Update QUEUE_URI in rocky.conf bytes.conf, boefjes.conf, octopoes.conf
-<pre>
-sed -i "s|QUEUE_URI= *\$|QUEUE_URI=amqp://kat:${RABBITMQ_PASSWORD}@localhost:5672/kat|" /etc/kat/*.conf
-</pre>
-#### Update Bytes credentials in rocky.conf, boefjes.conf, mula.conf
-<pre>
-sed -i "s/BYTES_PASSWORD= *\$/BYTES_PASSWORD=$(grep BYTES_PASSWORD /etc/kat/bytes.conf | awk -F'=' '{ print $2 }')/" /etc/kat/*.conf
+sudo systemctl enable kat-rocky kat-mula kat-bytes kat-boefjes kat-normalizers kat-katalogus kat-keiko kat-octopoes kat-octopoes-worker
 </pre>
 #### Restart KAT
 <pre>
 sudo systemctl restart kat-rocky kat-mula kat-bytes kat-boefjes kat-normalizers kat-katalogus kat-keiko kat-octopoes kat-octopoes-worker
-</pre>
-#### Start at systemboot
-<pre>
-sudo systemctl enable kat-rocky kat-mula kat-bytes kat-boefjes kat-normalizers kat-katalogus kat-keiko kat-octopoes kat-octopoes-worker
 </pre>
