@@ -112,11 +112,11 @@ sed -i "s|SCHEDULER_DSP_BROKER_URL= *\$|SCHEDULER_DSP_BROKER_URL=amqp://kat:${RA
 
 
 
-#### Update QUEUE_URI in rocky.conf bytes.conf boefjes.conf octopoes.conf
+#### Update QUEUE_URI in rocky.conf bytes.conf, boefjes.conf, octopoes.conf
 <pre>
 sed -i "s|QUEUE_URI= *\$|QUEUE_URI=amqp://kat:${RABBITMQ_PASSWORD}@localhost:5672/kat|" /etc/kat/*.conf
 </pre>
-#### Update Bytes credentials in rocky.conf boefjes.conf mula.conf
+#### Update Bytes credentials in rocky.conf, boefjes.conf, mula.conf
 <pre>
 sed -i "s/BYTES_PASSWORD= *\$/BYTES_PASSWORD=$(grep BYTES_PASSWORD /etc/kat/bytes.conf | awk -F'=' '{ print $2 }')/" /etc/kat/*.conf
 </pre>
