@@ -45,18 +45,14 @@ sudo -u postgres createdb katalogus_db
 sudo -u postgres psql -c "CREATE USER katalogus WITH PASSWORD '${KATALOGUSDB_PASSWORD}';"
 sudo -u postgres psql -c 'GRANT ALL ON DATABASE katalogus_db TO katalogus;'
 
-
 ### Step 4.5 - BytesDB
-
 sudo -u postgres createdb bytes_db
 sudo -u postgres psql -c "CREATE USER bytes WITH PASSWORD '${BYTESDB_PASSWORD}';"
 sudo -u postgres psql -c 'GRANT ALL ON DATABASE bytes_db TO bytes;'
 
-
 ### Step 4.6 - Update configs'
 #### Update ROCKY_DB_PASSWORD in /etc/kat/rocky.conf
 sudo sed -i "s|ROCKY_DB_PASSWORD= *\$|ROCKY_DB_PASSWORD=${ROCKYDB_PASSWORD}|" /etc/kat/rocky.conf
-
 
 #### Update BYTES_DB_URI in /etc/kat/bytes.conf
 sudo sed -i "s|BYTES_DB_URI= *\$|BYTES_DB_URI=postgresql://bytes:${BYTESDB_PASSWORD}@localhost/bytes_db|" /etc/kat/bytes.conf
@@ -71,7 +67,7 @@ sudo sed -i "s|SCHEDULER_DSP_BROKER_URL= *\$|SCHEDULER_DSP_BROKER_URL=amqp://kat
 sudo sed -i "s|SCHEDULER_RABBITMQ_DSN= *\$|SCHEDULER_RABBITMQ_DSN=amqp://kat:${RABBITMQ_PASSWORD}@localhost:5672/kat|" /etc/kat/mula.conf
 
 #### Update QUEUE_URI in rocky.conf bytes.conf, boefjes.conf, octopoes.conf
-su -c 'sed -i "s|QUEUE_URI= *\$|QUEUE_URI=amqp://kat:${RABBITMQ_PASSWORD}@localhost:5672/kat|" /etc/kat/*.conf'
+su -c 'source /home/user/passwords.txt && sed -i "s|QUEUE_URI= *\$|QUEUE_URI=amqp://kat:${RABBITMQ_PASSWORD}@localhost:5672/kat|" /etc/kat/bytes.conf && sed -i "s|QUEUE_URI= *\$|QUEUE_URI=amqp://kat:${RABBITMQ_PASSWORD}@localhost:5672/kat|" /etc/kat/boefjes.conf && sed -i "s|QUEUE_URI= *\$|QUEUE_URI=amqp://kat:${RABBITMQ_PASSWORD}@localhost:5672/kat|" /etc/kat/octopoes.conf'
 
 #### Update Bytes credentials in rocky.conf, boefjes.conf, mula.conf
 su -c 'source /home/user/passwords.txt && sed -i "s|BYTES_PASSWORD= *\$|BYTES_PASSWORD=${BYTESDB_PASSWORD}|" /etc/kat/rocky.conf && sed -i "s|BYTES_PASSWORD= *\$|BYTES_PASSWORD=${BYTESDB_PASSWORD}|" /etc/kat/boefjes.conf && sed -i "s|BYTES_PASSWORD= *\$|BYTES_PASSWORD=${BYTESDB_PASSWORD}|" /etc/kat/mula.conf'
