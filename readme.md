@@ -71,9 +71,8 @@ sudo -u postgres psql -c 'GRANT ALL ON DATABASE bytes_db TO bytes;'
 sudo -u kat update-bytes-db
 </pre>
 #### Remember updating /etc/kat/bytes.conf with 
-<pre>
-BYTES_DB_URI=postgresql://bytes:<password>@localhost/bytes_db
-</pre>
+`BYTES_DB_URI=postgresql://bytes:<password>@localhost/bytes_db`
+
 
 
 ### Step 5 - Create Superuser
@@ -102,10 +101,9 @@ rabbitmqctl set_permissions -p "kat" "kat" ".*" ".*" ".*"
 </pre>
 
 #### Remember to update /etc/kat/mula.conf with
-<pre>
-SCHEDULER_RABBITMQ_DSN=amqp://kat:<password>@localhost:5672/kat
-SCHEDULER_DSP_BROKER_URL=amqp://kat:<password>@localhost:5672/kat
-</pre>
+`SCHEDULER_RABBITMQ_DSN=amqp://kat:<password>@localhost:5672/kat`
+`SCHEDULER_DSP_BROKER_URL=amqp://kat:<password>@localhost:5672/kat`
+
 
 # Update QUEUE_URI to rocky.conf bytes.conf boefjes.conf octopoes.conf
 sed -i "s|QUEUE_URI= *\$|QUEUE_URI=amqp://kat:${RABBITMQ_PASSWORD}@localhost:5672/kat|" /etc/kat/*.conf
