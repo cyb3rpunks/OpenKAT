@@ -1,4 +1,5 @@
-# Installation for Debian 11 (https://docs.openkat.nl/technical_design/debianinstall.html)
+# Installation for Debian 11 
+##### (https://docs.openkat.nl/technical_design/debianinstall.html)
 
 ### Step 1 - Add user to sudo file
 <pre>
