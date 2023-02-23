@@ -102,6 +102,7 @@ rabbitmqctl set_permissions -p "kat" "kat" ".*" ".*" ".*"
 
 #### Remember to update /etc/kat/mula.conf with
 `SCHEDULER_RABBITMQ_DSN=amqp://kat:<password>@localhost:5672/kat`
+
 `SCHEDULER_DSP_BROKER_URL=amqp://kat:<password>@localhost:5672/kat`
 
 
