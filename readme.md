@@ -1,4 +1,4 @@
-# Installation for Debian 11
+# Installation for Debian 11 (https://docs.openkat.nl/technical_design/debianinstall.html)
 
 ### Step 1 - Add user to sudo file
 <pre>
@@ -58,10 +58,10 @@ sudo -u postgres psql -c 'GRANT ALL ON DATABASE katalogus_db TO katalogus;'
 sudo -u kat update-katalogus-db
 </pre>
 
-#### Remember updating /etc/kat/boefjes.conf with 
-
-`KATALOGUS_DB_URI=postgresql://katalogus:<password>@localhost/katalogus_db`
-
+#### Update KATALOGUS_DB_URI in /etc/kat/boefjes.conf
+<pre>
+sed -i "s|KATALOGUS_DB_URI= *\$|postgresql://katalogus:${KATALOGUSDB_PASSWORD}@localhost/katalogus_db|" /etc/kat/boefjes.conf
+</pre>
 
 ### Step 4.4 - BytesDB
 <pre>
@@ -70,9 +70,10 @@ echo "CREATE USER bytes WITH PASSWORD '$BYTESDB_PASSWORD';" | sudo -u postgres p
 sudo -u postgres psql -c 'GRANT ALL ON DATABASE bytes_db TO bytes;'
 sudo -u kat update-bytes-db
 </pre>
-#### Remember updating /etc/kat/bytes.conf with 
-`BYTES_DB_URI=postgresql://bytes:<password>@localhost/bytes_db`
-
+#### Update BYTES_DB_URI in /etc/kat/bytes.conf
+<pre>
+sed -i "s|BYTES_DB_URI= *\$|BYTES_DB_URI=postgresql://bytes:${BYTESDB_PASSWORD}@localhost/bytes_db|" /etc/kat/bytes.conf
+</pre>
 
 
 ### Step 5 - Create Superuser
@@ -98,17 +99,23 @@ rabbitmqctl add_vhost kat
 rabbitmqctl set_permissions -p "kat" "kat" ".*" ".*" ".*"
 </pre>
 
-#### Remember to update /etc/kat/mula.conf with
-`SCHEDULER_RABBITMQ_DSN=amqp://kat:<password>@localhost:5672/kat`
+##### Update SCHEDULER_RABBITMQ_DSN in /etc/kat/mula.conf 
+<pre>
+sed -i "s|SCHEDULER_RABBITMQ_DSN= *\$|SCHEDULER_RABBITMQ_DSN=amqp://kat:${RABBITMQ_PASSWORD}@localhost:5672/kat|" /etc/kat/mula.conf
+</pre>
 
-`SCHEDULER_DSP_BROKER_URL=amqp://kat:<password>@localhost:5672/kat`
+##### Update SCHEDULER_DSP_BROKER_URL in /etc/kat/mula.conf
+<pre>
+sed -i "s|SCHEDULER_DSP_BROKER_URL= *\$|SCHEDULER_DSP_BROKER_URL=amqp://kat:${RABBITMQ_PASSWORD}@localhost:5672/kat|" /etc/kat/mula.conf
+</pre>
+
 
 
 #### Update QUEUE_URI in rocky.conf bytes.conf boefjes.conf octopoes.conf
 <pre>
 sed -i "s|QUEUE_URI= *\$|QUEUE_URI=amqp://kat:${RABBITMQ_PASSWORD}@localhost:5672/kat|" /etc/kat/*.conf
 </pre>
-#### Configure Bytes credentials in rocky.conf boefjes.conf mula.conf
+#### Update Bytes credentials in rocky.conf boefjes.conf mula.conf
 <pre>
 sed -i "s/BYTES_PASSWORD= *\$/BYTES_PASSWORD=$(grep BYTES_PASSWORD /etc/kat/bytes.conf | awk -F'=' '{ print $2 }')/" /etc/kat/*.conf
 </pre>
