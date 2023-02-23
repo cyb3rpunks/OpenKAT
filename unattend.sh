@@ -1,17 +1,5 @@
 # Installation for Debian 11 
 ##### (https://docs.openkat.nl/technical_design/debianinstall.html)
-### Step 0 - Remove Old installations
-#### Delete Postgresql
-sudo apt-get --purge remove postgresql -y
-sudo apt-get --remove purge kat -y
-sudo apt-get purge postgresql* -y
-sudo apt-get remove kat* -y
-sudo apt-get --purge remove postgresql postgresql-doc postgresql-common -y
-sudo rm -rf /var/lib/postgresql/ 
-sudo rm -rf /var/log/postgresql/ 
-sudo rm -rf /etc/postgresql/ 
-#### Delete OpenKAT
-sudo apt-get remove --purge $(dpkg -l | grep -i kat | awk '{print $2}') -y
 
 ### Step 3 - Download and Install OpenKAT and Postgresql
 wget https://github.com/minvws/nl-kat-coordination/releases/download/v1.5.2/kat-debian11-1.5.2.tar.gz && wget https://github.com/dekkers/xtdb-http-multinode/releases/download/v1.0.2/xtdb-http-multinode_1.0.2_all.deb && tar zvxf kat-*.tar.gz && sudo apt install --no-install-recommends ./kat-*_amd64.deb ./xtdb-http-multinode_*_all.deb -y
