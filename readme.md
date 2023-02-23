@@ -104,7 +104,7 @@ rabbitmqctl set_permissions -p "kat" "kat" ".*" ".*" ".*"
 `SCHEDULER_DSP_BROKER_URL=amqp://kat:<password>@localhost:5672/kat`
 
 
-#### Update QUEUE_URI to rocky.conf bytes.conf boefjes.conf octopoes.conf
+#### Update QUEUE_URI in rocky.conf bytes.conf boefjes.conf octopoes.conf
 <pre>
 sed -i "s|QUEUE_URI= *\$|QUEUE_URI=amqp://kat:${RABBITMQ_PASSWORD}@localhost:5672/kat|" /etc/kat/*.conf
 </pre>
