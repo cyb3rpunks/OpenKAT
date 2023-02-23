@@ -105,15 +105,19 @@ rabbitmqctl set_permissions -p "kat" "kat" ".*" ".*" ".*"
 `SCHEDULER_DSP_BROKER_URL=amqp://kat:<password>@localhost:5672/kat`
 
 
-# Update QUEUE_URI to rocky.conf bytes.conf boefjes.conf octopoes.conf
+#### Update QUEUE_URI to rocky.conf bytes.conf boefjes.conf octopoes.conf
+<pre>
 sed -i "s|QUEUE_URI= *\$|QUEUE_URI=amqp://kat:${RABBITMQ_PASSWORD}@localhost:5672/kat|" /etc/kat/*.conf
-
-# Configure Bytes credentials in rocky.conf boefjes.conf mula.conf
+</pre>
+#### Configure Bytes credentials in rocky.conf boefjes.conf mula.conf
+<pre>
 sed -i "s/BYTES_PASSWORD= *\$/BYTES_PASSWORD=$(grep BYTES_PASSWORD /etc/kat/bytes.conf | awk -F'=' '{ print $2 }')/" /etc/kat/*.conf
-
-# Restart KAT
+</pre>
+#### Restart KAT
+<pre>
 sudo systemctl restart kat-rocky kat-mula kat-bytes kat-boefjes kat-normalizers kat-katalogus kat-keiko kat-octopoes kat-octopoes-worker
-
-# Start at systemboot
+</pre>
+#### Start at systemboot
+<pre>
 sudo systemctl enable kat-rocky kat-mula kat-bytes kat-boefjes kat-normalizers kat-katalogus kat-keiko kat-octopoes kat-octopoes-worker
-
+</pre>
