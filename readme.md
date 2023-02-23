@@ -60,7 +60,7 @@ sudo -u kat update-katalogus-db
 
 #### Remember updating /etc/kat/boefjes.conf with 
 <pre>
-KATALOGUS_DB_URI=postgresql://katalogus:<password>@localhost/katalogus_db
+KATALOGUS_DB_URI=postgresql://katalogus:\<password>@localhost/katalogus_db
 </pre>
 
 ### Step 4.4 - BytesDB
