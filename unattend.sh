@@ -40,7 +40,10 @@ sudo -u postgres psql -c 'GRANT ALL ON DATABASE bytes_db TO bytes;'
 
 ### Step 4.6 - Update configs'
 #### Update ROCKY_DB_PASSWORD in /etc/kat/rocky.conf
+source /home/user/passwords.txt
 sudo sed -i "s|ROCKY_DB_PASSWORD= *\$|ROCKY_DB_PASSWORD=${ROCKYDB_PASSWORD}|" /etc/kat/rocky.conf
+
+sudo sed -i "/BYTES_PASSWORD=/s/.*/BYTES_PASSWORD=${BYTESDB_PASSWORD}/" /etc/kat/bytes.conf
 
 #### Update BYTES_DB_URI in /etc/kat/bytes.conf
 sudo sed -i "s|BYTES_DB_URI= *\$|BYTES_DB_URI=postgresql://bytes:${BYTESDB_PASSWORD}@localhost/bytes_db|" /etc/kat/bytes.conf
