@@ -25,7 +25,7 @@ wget https://github.com/minvws/nl-kat-coordination/releases/download/v1.5.2/kat-
 sudo apt-get install postgresql -y
 </pre>
 
-### Step 4.1 Generating Passwords
+### Step 4.1 - Generating Passwords
 <pre>
 export ROCKYDB_PASSWORD=$(tr -dc A-Za-z0-9 < /dev/urandom | head -c 20)
 export KATALOGUSDB_PASSWORD=$(tr -dc A-Za-z0-9 < /dev/urandom | head -c 20)
@@ -33,7 +33,7 @@ export BYTESDB_PASSWORD=$(tr -dc A-Za-z0-9 < /dev/urandom | head -c 20)
 export RABBITMQ_PASSWORD=$(tr -dc A-Za-z0-9 < /dev/urandom | head -c 20)
 </pre>
 
-### Step 4.2 Saving Passwords to passwords.txt
+### Step 4.2 - Saving Passwords to passwords.txt
 <pre>
 echo ROCKYDB: $ROCKYDB_PASSWORD >> passwords.txt
 echo KATALOGUSDB: $KATALOGUSDB_PASSWORD >> passwords.txt
