@@ -1,6 +1,6 @@
 # OpenKAT Installation on Debian 11 
 ##### (https://docs.openkat.nl/technical_design/debianinstall.html)
-###### Minimal requirements
+#### Minimal requirements
 <pre> 
 ISO = debian-11.6.0-amd64-netinst.iso
 RAM = 4096MB
