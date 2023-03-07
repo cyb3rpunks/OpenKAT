@@ -1,5 +1,6 @@
 # Installation for Debian 11 
 ##### (https://docs.openkat.nl/technical_design/debianinstall.html)
+###### I used this ISO debian-11.6.0-amd64-netinst.iso
 
 ### Step 3 - Download and Install OpenKAT and Postgresql
 sudo wget https://github.com/minvws/nl-kat-coordination/releases/download/v1.5.2/kat-debian11-1.5.2.tar.gz
