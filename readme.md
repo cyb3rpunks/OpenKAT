@@ -29,3 +29,8 @@ sudo reboot
 <pre>
 ##### You can also copy the file contents and paste it in to the terminal
 </pre>
+
+### Passwords
+<pre> 
+##### Passwords are stored on creation at /home/user/passwords.txt
+</pre>
