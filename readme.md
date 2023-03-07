@@ -1,8 +1,11 @@
 # OpenKAT Installation on Debian 11 
 ##### (https://docs.openkat.nl/technical_design/debianinstall.html)
-###### I used this ISO: 
+###### Minimal requirements
 <pre> 
-debian-11.6.0-amd64-netinst.iso
+ISO = debian-11.6.0-amd64-netinst.iso
+RAM = 4096MB
+vCPU = 2
+Storage = 25GB
 </pre>
 
 ### Step 1 - Add user to sudo file
