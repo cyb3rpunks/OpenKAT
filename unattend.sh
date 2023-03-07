@@ -60,16 +60,16 @@ sudo sed -i "s|SCHEDULER_DSP_BROKER_URL= *\$|SCHEDULER_DSP_BROKER_URL=amqp://kat
 sudo sed -i "s|SCHEDULER_RABBITMQ_DSN= *\$|SCHEDULER_RABBITMQ_DSN=amqp://kat:${RABBITMQ_PASSWORD}@localhost:5672/kat|" /etc/kat/mula.conf
 
 #### Update QUEUE_URI in rocky.conf bytes.conf, boefjes.conf, octopoes.conf
-su -c 'source /home/user/passwords.txt'
-sed -i "s|QUEUE_URI= *\$|QUEUE_URI=amqp://kat:${RABBITMQ_PASSWORD}@localhost:5672/kat|" /etc/kat/rocky.conf 
-sed -i "s|QUEUE_URI= *\$|QUEUE_URI=amqp://kat:${RABBITMQ_PASSWORD}@localhost:5672/kat|" /etc/kat/bytes.conf
-sed -i "s|QUEUE_URI= *\$|QUEUE_URI=amqp://kat:${RABBITMQ_PASSWORD}@localhost:5672/kat|" /etc/kat/boefjes.conf
-sed -i "s|QUEUE_URI= *\$|QUEUE_URI=amqp://kat:${RABBITMQ_PASSWORD}@localhost:5672/kat|" /etc/kat/octopoes.conf
+sudo source '/home/user/passwords.txt'
+sudo sed -i "s|QUEUE_URI= *\$|QUEUE_URI=amqp://kat:${RABBITMQ_PASSWORD}@localhost:5672/kat|" /etc/kat/rocky.conf 
+sudo sed -i "s|QUEUE_URI= *\$|QUEUE_URI=amqp://kat:${RABBITMQ_PASSWORD}@localhost:5672/kat|" /etc/kat/bytes.conf
+sudo sed -i "s|QUEUE_URI= *\$|QUEUE_URI=amqp://kat:${RABBITMQ_PASSWORD}@localhost:5672/kat|" /etc/kat/boefjes.conf
+sudo sed -i "s|QUEUE_URI= *\$|QUEUE_URI=amqp://kat:${RABBITMQ_PASSWORD}@localhost:5672/kat|" /etc/kat/octopoes.conf
 
 #### Update BYTES_PASSWORD in rocky.conf, boefjes.conf, mula.conf
-sed -i "s|BYTES_PASSWORD= *\$|BYTES_PASSWORD=${BYTESDB_PASSWORD}|" /etc/kat/rocky.conf
-sed -i "s|BYTES_PASSWORD= *\$|BYTES_PASSWORD=${BYTESDB_PASSWORD}|" /etc/kat/boefjes.conf
-sed -i "s|BYTES_PASSWORD= *\$|BYTES_PASSWORD=${BYTESDB_PASSWORD}|" /etc/kat/mula.conf
+sudo sed -i "s|BYTES_PASSWORD= *\$|BYTES_PASSWORD=${BYTESDB_PASSWORD}|" /etc/kat/rocky.conf
+sudo sed -i "s|BYTES_PASSWORD= *\$|BYTES_PASSWORD=${BYTESDB_PASSWORD}|" /etc/kat/boefjes.conf
+sudo sed -i "s|BYTES_PASSWORD= *\$|BYTES_PASSWORD=${BYTESDB_PASSWORD}|" /etc/kat/mula.conf
 
 ### Step 4.7 - Initialize Databases
 sudo -u kat rocky-cli migrate
@@ -85,7 +85,9 @@ sudo -u kat rocky-cli setup_dev_account
 sudo apt install rabbitmq-server -y
 sudo systemctl stop rabbitmq-server
 sudo epmd -kill
-su -c 'echo listeners.tcp.local = 127.0.0.1:5672 > /etc/rabbitmq/rabbitmq.conf'
+su -c "echo listeners.tcp.local = 127.0.0.1:5672 > /etc/rabbitmq/rabbitmq.conf"
+su -c "echo export ERL_EPMD_ADDRESS=127.0.0.1 > /etc/rabbitmq/rabbitmq-env.conf"
+su -c "echo export NODENAME=rabbit@localhost >> /etc/rabbitmq/rabbitmq-env.conf"
 su -c "sudo cat > /etc/rabbitmq/advanced.conf << 'EOF'
 [
     {kernel,[
@@ -94,10 +96,13 @@ su -c "sudo cat > /etc/rabbitmq/advanced.conf << 'EOF'
 ].    
 EOF"
 
-sudo /usr/lib/rabbitmq/bin/rabbitmqctl add_user kat $RABBITMQ_PASSWORD
-sudo /usr/lib/rabbitmq/bin/rabbitmqctl add_vhost kat
-sudo /usr/lib/rabbitmq/bin/rabbitmqctl set_permissions -p "kat" "kat" ".*" ".*" ".*"
-
+sudo systemctl restart rabbitmq-server
+source '/home/user/passwords.txt'
+cd /usr/lib/rabbitmq/bin/rabbitmqctl
+sudo rabbitmqctl add_user kat ${RABBITMQ_PASSWORD}
+sudo rabbitmqctl add_vhost kat
+sudo rabbitmqctl set_permissions -p "kat" "kat" ".*" ".*" ".*"
+cd ~
 #### Start at systemboot
 sudo systemctl enable kat-rocky kat-mula kat-bytes kat-boefjes kat-normalizers kat-katalogus kat-keiko kat-octopoes kat-octopoes-worker
 
