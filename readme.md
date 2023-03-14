@@ -32,7 +32,7 @@ sudo sh VBoxLinuxAdditions.run
 sudo reboot
 </pre>
 
-### Step 3 - Run the unattend.sh 
+### Step 3 - Run the install.sh 
 <pre>
 ##### You can also copy the file contents and paste it in to the terminal
 </pre>
