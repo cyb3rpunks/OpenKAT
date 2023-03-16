@@ -1,5 +1,8 @@
 ### Step 0 - Remove Old installations (Beta)
 
+#### Delete old installation files
+sudo rm -rf *
+
 #### Delete Postgresql
 sudo apt-get --purge remove postgresql -y
 sudo apt-get --remove purge kat -y
