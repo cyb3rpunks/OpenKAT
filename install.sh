@@ -2,7 +2,7 @@
 ##### (https://docs.openkat.nl/technical_design/debianinstall.html)
 
 ### Step 3 - Download and Install OpenKAT and Postgresql
-sudo wget https://github.com/minvws/nl-kat-coordination/releases/download/v1.6.2/kat-debian11-1.6.2.tar.gz
+sudo wget https://github.com/minvws/nl-kat-coordination/releases/download/v1.7.0rc3/kat-debian11-1.7.0rc3.tar.gz
 sudo wget https://github.com/dekkers/xtdb-http-multinode/releases/download/v1.0.3/xtdb-http-multinode_1.0.3_all.deb
 sudo tar zvxf kat-*.tar.gz 
 sudo apt install --no-install-recommends ./kat-*_amd64.deb ./xtdb-http-multinode_*_all.deb -y
