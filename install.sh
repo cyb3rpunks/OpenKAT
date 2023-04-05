@@ -1,9 +1,35 @@
+#!/bin/bash
+
 # Installation for Debian 11 
 ##### (https://docs.openkat.nl/technical_design/debianinstall.html)
 
-### Step 3 - Download and Install OpenKAT and Postgresql
-sudo wget https://github.com/minvws/nl-kat-coordination/releases/download/v1.7.0rc3/kat-debian11-1.7.0rc3.tar.gz
-sudo wget https://github.com/dekkers/xtdb-http-multinode/releases/download/v1.0.3/xtdb-http-multinode_1.0.3_all.deb
+# Step 1 - Get latest prerelease of OpenKAT
+
+# The URL of the xtdb-http-multinode GitHub releases page
+xtdb_url='https://github.com/dekkers/xtdb-http-multinode/releases'
+
+# The URL of the nl-kat-coordination GitHub releases page
+nl_kat_url='https://github.com/minvws/nl-kat-coordination/releases'
+
+### Step 2 - Dowmload OpenKAT and Postgresql
+
+# Get the latest version of xtdb-http-multinode
+xtdb_content=$(curl -s $xtdb_url)
+xtdb_version=$(echo $xtdb_content | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' | sed 's/v//' | head -n 1)
+
+# Get the latest version of nl-kat-coordination
+nl_kat_content=$(curl -s $nl_kat_url)
+nl_kat_version=$(echo $nl_kat_content | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+rc[0-9]+' | sed 's/v//' | head -n 1)
+
+# Download the latest version of xtdb-http-multinode
+echo "Downloading xtdb-http-multinode version $xtdb_version..."
+curl -LO "https://github.com/dekkers/xtdb-http-multinode/releases/download/v${xtdb_version}/xtdb-http-multinode_${xtdb_version}_all.deb"
+
+# Download the latest version of nl-kat-coordination
+echo "Downloading nl-kat-coordination version $nl_kat_version..."
+curl -LO "https://github.com/minvws/nl-kat-coordination/releases/download/v${nl_kat_version}/kat-debian11-${nl_kat_version}.tar.gz"
+
+### Step 3 - Install OpenKAT and Postgresql
 sudo tar zvxf kat-*.tar.gz 
 sudo apt install --no-install-recommends ./kat-*_amd64.deb ./xtdb-http-multinode_*_all.deb -y
 
